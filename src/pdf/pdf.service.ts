@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as puppeteer from 'puppeteer';
+import axios from 'axios';
+import * as FormData from 'form-data';
 
 @Injectable()
 export class PdfService {
@@ -523,6 +525,27 @@ export class PdfService {
     });
 
     await browser.close();
+
+    // Отправка данных и файла в NocoDB
+    const form = new FormData();
+    form.append('name', data.person.name);
+    form.append('phone', data.person.phone);
+    form.append('mail', data.person.mail);
+    form.append('file', pdf, {
+      filename: 'bigspaces.pdf',
+      contentType: 'application/pdf',
+    });
+
+    try {
+      await axios.post(process.env.NOCO_URL!, form, {
+        headers: {
+          ...form.getHeaders(),
+          'xc-token': process.env.NOCO_TOKEN!,
+        },
+      });
+    } catch (e) {
+      // Можно залогировать ошибку, если нужно
+    }
 
     return pdf;
   }

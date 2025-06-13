@@ -527,44 +527,45 @@ export class PdfService {
 
     await browser.close();
 
-    // Отправка данных и файла в NocoDB
-    const form = new FormData();
-    form.append('name', data.person.name);
-    form.append('phone', data.person.phone);
-    form.append('mail', data.person.mail);
-    form.append('file', pdf, {
+    const fileForm = new FormData();
+    fileForm.append('file', pdf, {
       filename: 'bigspaces.pdf',
       contentType: 'application/pdf',
     });
-
-    try {
-      console.log('Sending request to NocoDB:', {
-        url: `${process.env.NOCO_URL}/mzioudu6v07b4on/records`,
+    const uploadRes = await axios.post(
+      `${process.env.NOCO_URL}/storage/upload`,
+      fileForm,
+      {
         headers: {
-          ...form.getHeaders(),
+          ...fileForm.getHeaders(),
           'xc-token': process.env.NOCO_TOKEN!,
         },
-        formData: {
-          name: data.person.name,
-          phone: data.person.phone,
-          mail: data.person.mail,
-          file: 'PDF_BINARY',
-        },
-      });
+      },
+    );
+    const fileUrl = uploadRes.data[0].url;
 
-      await axios.post(
-        `${process.env.NOCO_URL}/mzioudu6v07b4on/records`,
-        form,
+    const payload = {
+      name: data.person.name,
+      phone: data.person.phone,
+      mail: data.person.mail,
+      Attachment: [
         {
-          headers: {
-            ...form.getHeaders(),
-            'xc-token': process.env.NOCO_TOKEN!,
-          },
+          url: fileUrl,
+          title: 'bigspaces.pdf',
+          mimetype: 'application/pdf',
         },
-      );
-    } catch (e) {
-      console.error('NocoDB Error:', e.response?.data || e.message);
-    }
+      ],
+    };
+    await axios.post(
+      `${process.env.NOCO_URL}/tables/mzioudu6v07b4on/records`,
+      [payload], // массив объектов!
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'xc-token': process.env.NOCO_TOKEN!,
+        },
+      },
+    );
 
     return pdf;
   }
@@ -572,7 +573,7 @@ export class PdfService {
   async getData() {
     try {
       const response = await axios.get(
-        `${process.env.NOCO_URL}/mgi2ijypvo7j4zl/records`,
+        `${process.env.NOCO_URL}/tables/mgi2ijypvo7j4zl/records`,
         {
           headers: {
             'xc-token': process.env.NOCO_TOKEN!,

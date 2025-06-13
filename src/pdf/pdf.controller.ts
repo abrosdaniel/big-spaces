@@ -4,7 +4,9 @@ import {
   Body,
   Headers,
   UnauthorizedException,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { PdfService } from './pdf.service';
 
 @Controller('pdf')
@@ -12,11 +14,10 @@ export class PdfController {
   constructor(private readonly pdfService: PdfService) {}
 
   @Post('download')
-  async generatePdf(@Body() data: any, @Headers('origin') origin: string) {
-    if (origin !== process.env.SITE) {
-      throw new UnauthorizedException('Unauthorized domain');
-    }
-
-    return this.pdfService.generatePdf(data);
+  async generatePdf(@Body() data: any, @Res() res: Response) {
+    const pdfBuffer = await this.pdfService.generatePdf(data);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=bigspaces.pdf');
+    res.send(pdfBuffer);
   }
 }

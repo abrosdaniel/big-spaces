@@ -538,6 +538,20 @@ export class PdfService {
     });
 
     try {
+      console.log('Sending request to NocoDB:', {
+        url: `${process.env.NOCO_URL}/mzioudu6v07b4on/records`,
+        headers: {
+          ...form.getHeaders(),
+          'xc-token': process.env.NOCO_TOKEN!,
+        },
+        formData: {
+          name: data.person.name,
+          phone: data.person.phone,
+          mail: data.person.mail,
+          file: 'PDF_BINARY',
+        },
+      });
+
       await axios.post(
         `${process.env.NOCO_URL}/mzioudu6v07b4on/records`,
         form,
@@ -549,7 +563,7 @@ export class PdfService {
         },
       );
     } catch (e) {
-      // Можно залогировать ошибку, если нужно
+      console.error('NocoDB Error:', e.response?.data || e.message);
     }
 
     return pdf;

@@ -551,6 +551,8 @@ export class PdfService {
       },
     );
 
+    console.log('NocoDB uploadRes.data:', uploadRes.data);
+
     const uploadData = uploadRes.data;
     const fileField = [
       {

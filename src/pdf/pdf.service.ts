@@ -553,7 +553,10 @@ export class PdfService {
 
     console.log('NocoDB uploadRes.data:', uploadRes.data);
 
-    const uploadData = uploadRes.data;
+    const uploadDataArr = Array.isArray(uploadRes.data)
+      ? uploadRes.data
+      : [uploadRes.data];
+    const uploadData = uploadDataArr[0];
     const fileField = [
       {
         path: uploadData.path,
@@ -562,6 +565,8 @@ export class PdfService {
         size: uploadData.size,
       },
     ];
+
+    console.log('NocoDB fileField:', JSON.stringify(fileField, null, 2));
 
     const payload = {
       name: data.person.name,

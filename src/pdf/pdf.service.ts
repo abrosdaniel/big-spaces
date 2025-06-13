@@ -550,22 +550,26 @@ export class PdfService {
         },
       },
     );
-    const fileUrl =
-      uploadRes.data.url ||
-      (Array.isArray(uploadRes.data) && uploadRes.data[0]?.url);
+
+    const uploadData = uploadRes.data;
+    const fileField = [
+      {
+        path: uploadData.path,
+        title: uploadData.title,
+        mimetype: uploadData.mimetype,
+        size: uploadData.size,
+      },
+    ];
 
     const payload = {
       name: data.person.name,
       phone: data.person.phone,
       mail: data.person.mail,
-      file: [
-        {
-          url: fileUrl,
-          title: 'bigspaces.pdf',
-          mimetype: 'application/pdf',
-        },
-      ],
+      file: fileField,
     };
+
+    console.log('NocoDB payload:', JSON.stringify(payload, null, 2));
+
     await axios.post(
       `${process.env.NOCO_URL}/api/v2/tables/mzioudu6v07b4on/records`,
       [payload],

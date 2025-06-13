@@ -527,11 +527,19 @@ export class PdfService {
 
     await browser.close();
 
+    const timestamp = Date.now();
+    const filename = `bigspaces_${timestamp}.pdf`;
+    const filePath = `download/noco/bigspaces/attachment/${filename}`;
+
     const fileForm = new FormData();
     fileForm.append('file', pdf, {
-      filename: 'bigspaces.pdf',
+      filename,
       contentType: 'application/pdf',
     });
+    fileForm.append('mimetype', 'application/pdf');
+    fileForm.append('title', filename);
+    fileForm.append('path', filePath);
+
     const uploadRes = await axios.post(
       `${process.env.NOCO_URL}/storage/upload`,
       fileForm,
@@ -542,7 +550,9 @@ export class PdfService {
         },
       },
     );
-    const fileUrl = uploadRes.data[0].url;
+    const fileUrl =
+      uploadRes.data.url ||
+      (Array.isArray(uploadRes.data) && uploadRes.data[0]?.url);
 
     const payload = {
       name: data.person.name,
@@ -558,7 +568,7 @@ export class PdfService {
     };
     await axios.post(
       `${process.env.NOCO_URL}/tables/mzioudu6v07b4on/records`,
-      [payload], // массив объектов!
+      [payload],
       {
         headers: {
           'Content-Type': 'application/json',

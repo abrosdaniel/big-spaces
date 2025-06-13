@@ -538,16 +538,37 @@ export class PdfService {
     });
 
     try {
-      await axios.post(process.env.NOCO_URL!, form, {
-        headers: {
-          ...form.getHeaders(),
-          'xc-token': process.env.NOCO_TOKEN!,
+      await axios.post(
+        `${process.env.NOCO_URL}/mzioudu6v07b4on/records`,
+        form,
+        {
+          headers: {
+            ...form.getHeaders(),
+            'xc-token': process.env.NOCO_TOKEN!,
+          },
         },
-      });
+      );
     } catch (e) {
       // Можно залогировать ошибку, если нужно
     }
 
     return pdf;
+  }
+
+  async getData() {
+    try {
+      const response = await axios.get(
+        `${process.env.NOCO_URL}/mgi2ijypvo7j4zl/records`,
+        {
+          headers: {
+            'xc-token': process.env.NOCO_TOKEN!,
+          },
+        },
+      );
+      return response.data;
+    } catch (e) {
+      // Можно залогировать ошибку, если нужно
+      return null;
+    }
   }
 }

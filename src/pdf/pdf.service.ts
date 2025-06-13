@@ -541,7 +541,7 @@ export class PdfService {
     fileForm.append('path', filePath);
 
     const uploadRes = await axios.post(
-      `${process.env.NOCO_URL}/storage/upload`,
+      `${process.env.NOCO_URL}/api/v2/storage/upload`,
       fileForm,
       {
         headers: {
@@ -558,7 +558,7 @@ export class PdfService {
       name: data.person.name,
       phone: data.person.phone,
       mail: data.person.mail,
-      Attachment: [
+      file: [
         {
           url: fileUrl,
           title: 'bigspaces.pdf',
@@ -567,7 +567,7 @@ export class PdfService {
       ],
     };
     await axios.post(
-      `${process.env.NOCO_URL}/tables/mzioudu6v07b4on/records`,
+      `${process.env.NOCO_URL}/api/v2/tables/mzioudu6v07b4on/records`,
       [payload],
       {
         headers: {
@@ -583,7 +583,7 @@ export class PdfService {
   async getData() {
     try {
       const response = await axios.get(
-        `${process.env.NOCO_URL}/tables/mgi2ijypvo7j4zl/records`,
+        `${process.env.NOCO_URL}/api/v2/tables/mgi2ijypvo7j4zl/records`,
         {
           headers: {
             'xc-token': process.env.NOCO_TOKEN!,

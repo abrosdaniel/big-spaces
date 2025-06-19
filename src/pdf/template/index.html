@@ -138,9 +138,10 @@
       body {
         height: 100vh;
         width: 100vw;
+        display: contents;
       }
 
-      main {
+      #main {
         width: 100%;
         padding: 50px;
         box-sizing: border-box;
@@ -182,6 +183,7 @@
       #title h2 {
         font-size: 22px;
         font-weight: 400;
+        font-style: italic;
       }
 
       table {
@@ -280,20 +282,20 @@
         color: #8e8e8e;
       }
 
-      footer {
+      #footer {
         background-color: black;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding: 39px 50px;
       }
-      footer #menu {
+      #footer #menu {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 40px;
       }
-      footer #phone {
+      #footer #phone {
         font-size: 13px;
         font-weight: 600;
         text-decoration: none;
@@ -301,7 +303,7 @@
         color: white;
         margin-right: 20px;
       }
-      footer #whatsapp {
+      #footer #whatsapp {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -311,7 +313,7 @@
         text-decoration: none;
         color: white;
       }
-      footer #telegram {
+      #footer #telegram {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -324,7 +326,7 @@
     </style>
   </head>
   <body>
-    <main>
+    <div id="main">
       <div id="header">
         <div id="left">
           <p>Предварительное предложение от ${new Date().toLocaleDateString('ru-RU')}</p>
@@ -451,8 +453,8 @@
           со скрытыми и<br />непредвиденными расходами
         </p>
       </div>
-    </main>
-    <footer>
+    </div>
+    <div id="footer">
       <svg
         width="167"
         height="22"
@@ -617,6 +619,6 @@
           <p>Telegram</p>
         </a>
       </div>
-    </footer>
+    </div>
   </body>
 </html>

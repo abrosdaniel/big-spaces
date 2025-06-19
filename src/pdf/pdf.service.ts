@@ -20,7 +20,7 @@ export class PdfService {
       const page = await browser.newPage();
 
       // Читаем HTML шаблон из файла
-      const templatePath = path.join(process.cwd(), 'src', 'pdf', 'template', 'index.html');
+      const templatePath = path.join(__dirname, 'template', 'index.html');
       let html = fs.readFileSync(templatePath, 'utf8');
 
       // Подставляем данные в шаблон
@@ -49,7 +49,7 @@ export class PdfService {
       html = html.replace(/\${data\.sum}/g, data.sum);
       html = html.replace(/\${new Date\(\)\.toLocaleDateString\('ru-RU'\)}/g, new Date().toLocaleDateString('ru-RU'));
 
-      tempHtmlPath = path.join(process.cwd(), 'src', 'pdf', 'template', 'index.html');
+      tempHtmlPath = path.join(__dirname, 'template', 'temp.html');
       fs.writeFileSync(tempHtmlPath, html);
 
       const fileUrl = `file://${tempHtmlPath}`;

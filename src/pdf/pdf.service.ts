@@ -10,7 +10,7 @@ export class PdfService {
   async generatePdf(data: any) {
     let browser;
     let tempHtmlPath;
-    
+
     try {
       browser = await puppeteer.launch({
         headless: true,
@@ -19,18 +19,40 @@ export class PdfService {
 
       const page = await browser.newPage();
 
-      // Читаем HTML шаблон из файла
-      const templatePath = path.join(process.cwd(), 'src', 'pdf', 'template', 'index.html');
+      const templatePath = path.join(
+        process.cwd(),
+        'src',
+        'pdf',
+        'template',
+        'index.html',
+      );
       let html = fs.readFileSync(templatePath, 'utf8');
 
-      // Подставляем данные в шаблон
-      html = html.replace(/\${data\.parameters\.length}/g, data.parameters.length);
-      html = html.replace(/\${data\.parameters\.width}/g, data.parameters.width);
-      html = html.replace(/\${data\.parameters\.height}/g, data.parameters.height);
-      html = html.replace(/\${data\.parameters\.floors}/g, data.parameters.floors);
+      html = html.replace(
+        /\${data\.parameters\.length}/g,
+        data.parameters.length,
+      );
+      html = html.replace(
+        /\${data\.parameters\.width}/g,
+        data.parameters.width,
+      );
+      html = html.replace(
+        /\${data\.parameters\.height}/g,
+        data.parameters.height,
+      );
+      html = html.replace(
+        /\${data\.parameters\.floors}/g,
+        data.parameters.floors,
+      );
       html = html.replace(/\${data\.project}/g, data.project);
-      html = html.replace(/\${data\.foundation\.depth}/g, data.foundation.depth);
-      html = html.replace(/\${data\.foundation\.volume}/g, data.foundation.volume);
+      html = html.replace(
+        /\${data\.foundation\.depth}/g,
+        data.foundation.depth,
+      );
+      html = html.replace(
+        /\${data\.foundation\.volume}/g,
+        data.foundation.volume,
+      );
       html = html.replace(/\${data\.foundation\.sum}/g, data.foundation.sum);
       html = html.replace(/\${data\.metal\.volume}/g, data.metal.volume);
       html = html.replace(/\${data\.metal\.sum}/g, data.metal.sum);
@@ -47,9 +69,11 @@ export class PdfService {
       html = html.replace(/\${data\.window\.count}/g, data.window.count);
       html = html.replace(/\${data\.window\.sum}/g, data.window.sum);
       html = html.replace(/\${data\.sum}/g, data.sum);
-      html = html.replace(/\${new Date\(\)\.toLocaleDateString\('ru-RU'\)}/g, new Date().toLocaleDateString('ru-RU'));
+      html = html.replace(
+        /\${new Date\(\)\.toLocaleDateString\('ru-RU'\)}/g,
+        new Date().toLocaleDateString('ru-RU'),
+      );
 
-      // Создаем временный файл в корне проекта
       const tempHtmlPath = path.join(process.cwd(), 'temp.html');
       fs.writeFileSync(tempHtmlPath, html);
 
@@ -63,13 +87,12 @@ export class PdfService {
 
       await browser.close();
 
-      // Удаляем временный файл
       if (tempHtmlPath && fs.existsSync(tempHtmlPath)) {
         fs.unlinkSync(tempHtmlPath);
       }
 
-      const timestamp = Date.now();
-      const filename = `bigspaces_${timestamp}.pdf`;
+      // const timestamp = Date.now();
+      const filename = `BIG SPACES.pdf`;
       const filePath = `download/noco/bigspaces/attachment/${filename}`;
 
       const fileForm = new FormData();
@@ -132,17 +155,15 @@ export class PdfService {
       return pdf;
     } catch (error) {
       console.error('Ошибка при генерации PDF:', error);
-      
-      // Закрываем браузер если он был открыт
+
       if (browser) {
         await browser.close();
       }
-      
-      // Удаляем временный файл если он был создан
+
       if (tempHtmlPath && fs.existsSync(tempHtmlPath)) {
         fs.unlinkSync(tempHtmlPath);
       }
-      
+
       throw error;
     }
   }

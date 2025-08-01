@@ -8,6 +8,7 @@ import * as path from 'path';
 @Injectable()
 export class PdfService {
   async generatePdf(data: any) {
+    console.log('Calculator Data:', data);
     let browser;
     let tempHtmlPath;
 
